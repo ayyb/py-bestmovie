@@ -42,7 +42,14 @@ def home():
     #                   img_url="https://image.tmdb.org/t/p/w500/tjrX2oWRCM3Tvarz38zlZM7Uc10.jpg")  # 기본키 필드는 선택사항
     # db.session.add(new_movie)
     # db.session.commit()
-    all_movies = db.session.query(Movie).all()
+    all_movies = db.session.query(Movie).order_by(Movie.rating.desc()).all()
+
+    # 순위 업데이트
+    for movie in all_movies:
+        movie_ranking = all_movies[0::].index(movie) #현재 인덱스값
+        print(movie_ranking)
+        movie.ranking = movie_ranking + 1
+    db.session.commit()
     return render_template("index.html",all_movies = all_movies)
 
 class RateMovieForm(FlaskForm):
